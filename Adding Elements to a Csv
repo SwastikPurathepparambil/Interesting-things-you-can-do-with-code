@@ -1,0 +1,24 @@
+import csv
+import pandas as pd
+file_output = open('UI_code.csv', mode = 'w', newline = '')
+csv_writer = csv.writer(file_output, delimiter=',')
+csv_writer.writerows([['Movement','Days','Sets','Reps']])
+file_output.close()
+
+f = open('UI_code.csv', mode = 'a', newline = '')
+csv_writer = csv.writer(f)
+
+def add_in_entry():
+    movement = input('What movement do you want to add to your schedule: ')
+    movement[0].upper()
+    days = input('How many days will you do this movement: ')
+    sets = input('How many sets of this movement will you do per day: ')
+    reps = input('How many reps of this movement will you do per set: ')
+    csv_writer.writerows([[movement, str(days), str(sets), str(reps)]])
+    print('Movements added!')
+    
+add_in_entry()
+    
+f.close()
+
+pd.read_csv('UI_code.csv')
