@@ -1,0 +1,37 @@
+#import libraries
+# Notes: the password you need to use is not your personal password, but instead you go 
+# https://myaccount.google.com/apppassword and then generate a temporary password from 
+# there(a 16 digit code). For "Select app", choose Mail, and for "Select device" choose
+# Other(Custom) and name whatever you want(prefereably something that shows that this 
+# is for emaling in python), click generate and copy paste the password into the prompt 
+# that asks  "Password: " in the following code; make sure that the app password has no 
+# spaces. Remember that you have to run smtp.starttls() because it starts the whole
+# process of sending emails
+
+
+import smtplib
+import getpass
+
+
+smtp_object = smtplib.SMTP('smtp.gmail.com',587)
+smtp_object.ehlo()
+smtp_object.starttls()
+email = getpass.getpass("Email: ")
+password = getpass.getpass("Password: ")
+smtp_object.login(email,password)
+
+
+#from address is ur email
+from_address = email
+
+#to address is who ur sending it to
+to_address = getpass.getpass("Who are you sending this email to: ")
+
+#subject and message
+subject = input('enter subject: ')
+message = input('enter message: ')
+msg = "Subject: "+subject+"\n"+message
+
+# send and do action
+smtp_object.sendmail(from_address,to_address,msg)
+smtp_object.quit()
