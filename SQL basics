@@ -1,0 +1,479 @@
+-- DONT RUN ALL OF THIS AT THE SAME TIME --
+-- Pick and choose some things at a time and 
+-- play around with it however you would like --
+
+-- this creates the table-- 
+create table boy(
+-- here is where you can add id or just an int --	
+	id Int Primary Key,
+-- you can add elements to table    
+	sports Varchar(45),
+-- like "sports" and "hobby"    
+	hobby Varchar(45)
+);
+-- this gives info on the table -- 
+Describe boy;
+
+-- This delete the table-- 
+Drop table boy;
+
+-- This adds columns --
+Alter table boy ADD school Varchar(30);
+
+-- this deletes columns
+alter table boy drop school;
+
+-- this adds actual info into the table --
+insert into boy values(1, "soccer", "cool thing");
+
+
+-- if one column is null you can do this -- 
+insert into boy(id,sports) values(2, "basketball");
+
+
+-- this selects all the info in a table -- 
+Select * from boy;
+
+-- MORE COOL THINGS ON CREATING TABLES(just deleted the table"boy") --
+create table boy(
+	id Int Primary Key,
+-- you can make certain elements not be allowed to have a null value --   
+	sports Varchar(45) Not Null,  
+-- yo can also make it so that all the data in a certain table has to be a unique value --
+	hobby Varchar(45) Unique
+);
+-- what happens when there is a null value where there shouldnt be --
+insert into boy(id,hobby) values (1,"jingling");
+
+-- what happens when there is a non-unique value where there shouldnt be
+insert into boy values(1,"soccer", "jangling");
+insert into boy values(2,"basketball", "jangling");
+
+-- Default values/Auto Incriment ("just deleted the table boy) look at sports column and hobby cloumn --
+create table boy(
+	id Int Primary Key auto_increment,
+-- you can make certain elements not be allowed to have a null value --   
+	sports Varchar(45) Default "undecided",  
+-- yo can also make it so that all the data in a certain table has to be a unique value --
+	hobby Varchar(45)  default "undecided"
+);
+
+-- This is what it looks like in a table -- 
+-- adding info --
+insert into boy(sports) values("Soccer");
+insert into boy(hobby) values("playing things");
+-- showing info --
+Select* from boy;
+
+-- Update and Deleting info --
+
+-- Updating
+Update boy 
+set sports = "Basketball" 
+-- This where clause is the if of python, however the 
+-- only things that can be put into this are column 
+-- names and values that are in that specific column -- 
+where sports = "Soccer";
+Select * from boy;
+
+-- Can turn where clauses into "Or" statements (only 
+-- one of many conditions have to be true) or "And" 
+-- statements (all of the conditions have to be true) --
+-- Can also change two things about one row as well--
+update boy
+set sports = "Soccer"
+where sports = "undecided" or hobby = "undecided";
+
+Select * from boy;
+
+-- and/changing two things in one row --
+
+update boy
+set sports = "Basketball", hobby = "coding"
+where sports = "" and hobby = "playing things";
+
+Select * from boy;
+
+
+--  Deleting --
+-- Mostly the same as updating --
+Insert into boy(sports,hobby) values("Swimming", "singing");
+Select * from boy;
+
+-- can do and clauses in deleting as well but this is more simple b/c it is the same syntax as updating--
+Delete from boy
+where id = 4;
+Select * from boy;
+
+
+-- Just going to add some info for the next part -- 
+Insert into boy(sports,hobby) values("Dancing", "Fiddling");
+Insert into boy(sports,hobby) values("Baseball", "Gaming");
+Insert into boy(sports,hobby) values("Football", "Writing");
+Insert into boy(sports,hobby) values("Tennis", "Knitting");
+Insert into boy values(4,"E-Sports", "Running");
+select * from boy;
+
+-- QUERYING --
+-- many ways of querying, start off with * and certain column names --
+-- * --
+Select * from boy;
+
+-- column name/names --
+-- in good practice to write the name of where the query is coming from so that if two tables are used theres no confusion --
+Select boy.sports from boy;
+
+Select boy.id,boy.hobby from boy;
+
+-- Order By: list from item names start with a at top to z at bottom --
+Select boy.hobby, boy.sports from boy order by boy.hobby;
+-- Note: Can do order by with two columns, but that usually only 
+-- happens when two rows have the same info but one different thing such as id
+
+
+-- Limit: lists the number of row --
+Select boy.hobby from boy limit 3;
+
+-- Can do order by and limit in same query --
+Select boy.id, boy.sports from boy 
+order by id 
+limit 4;
+
+-- Filtering using WHERE --
+-- Once again can use or but not going to
+-- because syntax is the same as in the 
+-- update  function above --
+Select boy.id, boy.sports from boy 
+where id > 3
+order by boy.id
+limit 2;
+
+-- Where clauses: <, >, <=, >=, And, Or, <> (not), IN(example below)--
+Select boy.id, boy.sports from boy
+where boy.sports IN ("Basketball","Dancing") or boy.id in (3,4,5,6)
+limit 4;
+
+-- ON delete set null means that if there is a place where
+-- 102 is a foreign key and relates to something, the result
+-- wil be null --
+Delete from employee
+where emp_id = 102;
+
+-- Triggers -- 
+Create table trigger_t (
+	message varchar(45)
+);
+
+
+-- extra things --
+-- Triggers --
+-- These are to add something before the insert values
+-- Put this into command line sql not in mySQL
+
+
+-- Create 
+-- 	   trigger triggerer before insert
+--     on employee
+-- 	   for each row begin
+-- 			if new.gender = "M" then 
+-- 				Insert into trigger_t values("added male employee")
+-- 			elseif new.gender = "F" then
+-- 				Insert into trigger_t values("added female employee")
+-- 			else
+-- 				Insert into trigger_t values("added employee")
+
+Create table employee1 (
+	id Int primary key,
+    name1 varchar(45)
+);
+
+Create table emp_salary (
+	emp_id Int primary key,
+    salary Int
+    
+);
+
+Insert into employee1 values (1, "Acha");
+Insert into employee1 values (2, "Amma");
+Insert into employee1 values (3, "Pranav");
+Insert into employee1 values (4, "Swastik");
+
+Insert into emp_salary values (1, 10000);
+Insert into emp_salary values (2, 20000);
+Insert into emp_salary values (3, 30000);
+Insert into emp_salary values (4, 40000);
+
+Select * from emp_salary;
+
+Select * from employee1;
+
+Select emp_id from emp_salary
+order by salary desc
+limit 1;
+
+Select name1, salary from employee1
+join emp_salary
+on employee1.id = emp_salary.emp_id
+order by salary desc
+limit 1;
+
+
+
+-- Slightly more advanced --
+
+
+
+CREATE TABLE employee (
+  emp_id INT PRIMARY KEY,
+  first_name VARCHAR(40),
+  last_name VARCHAR(40),
+  birth_day DATE,
+  gender VARCHAR(1),
+  salary INT,
+  super_id INT,
+  branch_id INT
+);
+
+CREATE TABLE branch (
+  branch_id INT PRIMARY KEY,
+  branch_name VARCHAR(40),
+  mgr_id INT,
+  mgr_start_date DATE,
+  FOREIGN KEY(mgr_id) REFERENCES employee(emp_id) ON DELETE SET NULL
+);
+
+Alter table employee add foreign key(branch_id)
+references branch(branch_id) On delete set null;
+
+Alter table employee add foreign key(super_id)
+references employee(emp_id) On delete set null;
+
+
+Create table clients (
+    client_id int primary key,
+    client_name VarChar(40),
+    branch_id int,
+    Foreign Key(branch_id) references branch(branch_id) on delete set null
+);
+
+Create table works_with (
+	emp_id int,
+    client_id int,
+    total_sales int,
+    primary key(emp_id, client_id),
+    foreign key(emp_id) references employee(emp_id) on delete cascade,
+	foreign key(client_id) references clients(client_id) on delete cascade
+);
+
+
+Create table branch_supplier (
+	branch_id int,
+    supplier_name varchar(45),
+    supply_type varchar(45),
+    primary key(branch_id, supplier_name),
+    foreign key(branch_id) references branch(branch_id) on delete cascade
+);
+
+
+-- inserting info when there are foreign keys and composite keys and all the things -- 
+-- one way of doing it --
+insert into employee values(100,"David", "Wallace", "1967-11-17", "M", 250000,  null, null);
+insert into branch values(1, "Corporate", 100, "2006-02-09");
+
+Update employee
+Set branch_id = 1
+where emp_id = 100;
+
+
+INSERT INTO employee VALUES(102, 'Michael', 'Scott', '1964-03-15', 'M', 75000, 100, null);
+INSERT INTO branch VALUES(2, 'Scranton', 102, '1992-04-06');
+
+Update employee
+Set branch_id = 2
+where emp_id = 102;
+
+INSERT INTO employee VALUES(106, 'Josh', 'Porter', '1969-09-05', 'M', 78000, 100, null);
+INSERT INTO branch VALUES(3, 'Stamford', 106, '1998-02-13');
+
+Update employee
+Set branch_id = 3
+where emp_id = 106;
+
+INSERT INTO employee VALUES(103, 'Angela', 'Martin', '1971-06-25', 'F', 63000, 102, 2);
+INSERT INTO employee VALUES(104, 'Kelly', 'Kapoor', '1980-02-05', 'F', 55000, 102, 2);
+INSERT INTO employee VALUES(105, 'Stanley', 'Hudson', '1958-02-19', 'M', 69000, 102, 2);
+INSERT INTO employee VALUES(107, 'Andy', 'Bernard', '1973-07-22', 'M', 65000, 106, 3);
+INSERT INTO employee VALUES(108, 'Jim', 'Halpert', '1978-10-01', 'M', 71000, 106, 3);
+
+
+Update employee
+set gender = "M"
+Where emp_id in(100,102,105,106,107,108);
+
+Update employee
+set gender = "F"
+Where emp_id in(103,104);
+
+INSERT INTO employee(gender) VALUES('M');
+INSERT INTO employee(gender) VALUES('M');
+INSERT INTO employee(gender) VALUES('F');
+INSERT INTO employee(gender) VALUES('F');
+INSERT INTO employee(gender) VALUES('M');
+INSERT INTO employee(gender) VALUES('M');
+INSERT INTO employee(gender) VALUES('M');
+INSERT INTO employee(gender) VALUES('M');
+
+
+
+INSERT INTO branch_supplier VALUES(2, 'Hammer Mill', 'Paper');
+INSERT INTO branch_supplier VALUES(2, 'Uni-ball', 'Writing Utensils');
+INSERT INTO branch_supplier VALUES(3, 'Patriot Paper', 'Paper');
+INSERT INTO branch_supplier VALUES(2, 'J.T. Forms & Labels', 'Custom Forms');
+INSERT INTO branch_supplier VALUES(3, 'Uni-ball', 'Writing Utensils');
+INSERT INTO branch_supplier VALUES(3, 'Hammer Mill', 'Paper');
+INSERT INTO branch_supplier VALUES(3, 'Stamford Lables', 'Custom Forms');
+
+
+INSERT INTO clients VALUES(400, 'Dunmore Highschool', 2);
+INSERT INTO clients VALUES(401, 'Lackawana Country', 2);
+INSERT INTO clients VALUES(402, 'FedEx', 3);
+INSERT INTO clients VALUES(403, 'John Daly Law, LLC', 3);
+INSERT INTO clients VALUES(404, 'Scranton Whitepages', 2);
+INSERT INTO clients VALUES(405, 'Times Newspaper', 3);
+INSERT INTO clients VALUES(406, 'FedEx', 2);
+
+
+INSERT INTO works_with VALUES(105, 400, 55000);
+INSERT INTO works_with VALUES(102, 401, 267000);
+INSERT INTO works_with VALUES(108, 402, 22500);
+INSERT INTO works_with VALUES(107, 403, 5000);
+INSERT INTO works_with VALUES(108, 403, 12000);
+INSERT INTO works_with VALUES(105, 404, 33000);
+INSERT INTO works_with VALUES(107, 405, 26000);
+INSERT INTO works_with VALUES(102, 406, 15000);
+INSERT INTO works_with VALUES(105, 406, 130000);
+
+Select * from employee;
+
+Select * from branch_supplier;
+
+Select * from clients;
+
+Select * from works_with;
+
+Select * from branch;
+
+Select  first_name,salary,gender from employee
+order by gender, first_name, last_name Desc;
+
+Select first_name from employee
+limit 5;
+
+Select first_name as Forename, last_name as Surname 
+from employee;
+
+Select distinct first_name from employee;
+
+
+
+
+-- FUNCTIONS -- 
+Select count(emp_id) from employee;
+
+Select count(super_id) from employee;
+
+Select count(emp_id)
+from employee
+where gender = 'F' and birth_day > "1970-01-01";
+
+Select avg(salary) from employee
+where gender = "F";
+
+Select sum(salary) from employee
+where gender = "M";
+
+Select count(gender), gender
+from employee
+group by gender;
+
+Select  employee.first_name, works_with.total_sales
+from works_with,employee
+where employee.emp_id = works_with.emp_id
+group by works_with.total_sales;
+
+Select first_name, sum(total_sales)
+from works_with, employee
+where employee.emp_id = works_with.emp_id
+group by works_with.emp_id;
+
+
+-- WILDCARDS -- 
+-- In the where clause, you can use LIKE --
+Select * from employee
+where birth_day Like "____-02%";
+-- not case sensitive --
+Select * from clients
+where client_name Like "%School%";
+
+-- UNION: both have to select the same number of things
+-- and both have to have the same type of value like int
+Select first_name as "Names of everything" from employee
+union
+Select branch_name from branch;
+
+Select supplier_name, branch_supplier.branch_id from branch_supplier
+union
+Select client_name, clients.branch_id from clients;
+
+Select sum(salary) from employee
+union
+Select sum(total_sales)
+from works_with;
+
+-- Cool thing --
+Select sum(salary) - sum(total_sales) from employee,works_with;
+
+-- JOINS -- 
+Insert into branch values(4, "Buffalo", null, null);
+-- inner join makes it so that the only rows showed are 
+-- the ones that meet the "on" requirement --
+Select employee.first_name, branch.branch_name
+from employee 
+join branch
+on employee.emp_id = branch.mgr_id;
+
+-- left join makes it so that all the rows from whatever is 
+-- in the "employee" position is included
+Select employee.emp_id, employee.first_name, branch.branch_name
+from employee 
+left join branch
+on employee.emp_id = branch.mgr_id;
+
+-- right join makes it so that all the rows from whatever is
+-- right after the "right join" is included
+Select employee.emp_id, employee.first_name, branch.branch_name
+from employee 
+right join branch
+on employee.emp_id = branch.mgr_id;
+
+-- not able to shown in mySQL, but full outer join adds
+-- left join and right join together --
+
+
+
+-- NESTED QUERIES -- 
+Select employee.first_name, employee.last_name 
+from employee
+where employee.emp_id IN (
+	Select works_with.emp_id
+    from works_with
+    where works_with.total_sales > 30000
+);
+-- If its one result you are looking for, use = and then
+-- nested statement. If multiple, use IN --
+Select clients.client_name,clients.branch_id from clients
+where clients.branch_id in(
+	Select branch.branch_id from branch
+    where mgr_id = 102
+    Limit 1
+);
