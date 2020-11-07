@@ -1,0 +1,37 @@
+import pandas as pd
+import csv
+# choose your own csv
+df = pd.read_csv('(Any csv that you want)')
+output = []
+# Part 1 of tuple
+for x in df['(part1 of your tuple; ex: id)']:
+    if x not in output:
+        output.append(x)
+li = []
+#Part 2 of tuple
+for i in df['(part2 of your tuple; ex: name)']:
+    if type(i) != float:
+        li.append(i)
+
+final_list = []
+indexo = 0
+indexl = 0
+while indexo < len(output) and indexl < len(li):
+    if output.index(output[indexo]) == li.index(li[indexl]):
+        final_list.append((output[indexo],li[indexl]))
+        output.pop(0)
+        li.pop(0)
+        continue
+        
+file_output = open('(name of csv is your choice).csv', mode = 'w', newline = '')
+csv_writer = csv.writer(file_output, delimiter=',')
+csv_writer.writerows([['(name of part1)','(name of part2)']])
+file_output.close()
+
+f = open('(name you chose).csv', mode = 'a', newline = '')
+csv_writer = csv.writer(f)
+for a,b in final_list:
+    csv_writer.writerows([[str(a),str(b)]])
+f.close()
+
+# the reason why lists are a good choice is because they allow you to filter information, so you only need small tweaks to take out certain things
